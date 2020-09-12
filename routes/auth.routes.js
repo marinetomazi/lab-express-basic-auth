@@ -51,7 +51,7 @@ router.post('/login', (req, res, next) => {
   
         // comparer le password fourni avec le password (hashé) en base
         if (bcryptjs.compareSync(password, user.passwordHash)) {
-          console.log('user ok', user)
+            req.session.user = user
           res.redirect('/profil')
         } else {
           res.render('auth/login', {errorMessage: ' Incorrect email/password'})
@@ -62,7 +62,10 @@ router.post('/login', (req, res, next) => {
 
 
 router.get('/profil', (req, res, next) =>{
-    res.render('users/userProfil')
+    if(!req.session.user){
+        res.redirect('/login')
+    }
+    res.render('users/userProfil',{user: req.session.user})
 }
 )
 
