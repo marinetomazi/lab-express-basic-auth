@@ -32,7 +32,7 @@ router.get('/login', (req, res, next) => {
 })
 
 router.post('/login', (req, res, next) => {
-    const {username, password} = req.body
+    const {email, password} = req.body
 
     //Validation
     if (!email || !password) {
@@ -42,11 +42,28 @@ router.post('/login', (req, res, next) => {
         return; // STOP
     }
 
-    User.findOne({email: email})
+    User.findOne({username: email})
     .then(user => {
-        console.log(user);
-    })
+        if (!user) {
+          res.render('auth/login', {errorMessage: ' Incorrect email/password'})
+          return; // STOP
+        }
+  
+        // comparer le password fourni avec le password (hashé) en base
+        if (bcryptjs.compareSync(password, user.passwordHash)) {
+          console.log('user ok', user)
+          res.redirect('/profil')
+        } else {
+          res.render('auth/login', {errorMessage: ' Incorrect email/password'})
+        }
+      })
     .catch(err => next(err))
 })
+
+
+router.get('/profil', (req, res, next) =>{
+    res.render('users/userProfil')
+}
+)
 
 module.exports = router;
