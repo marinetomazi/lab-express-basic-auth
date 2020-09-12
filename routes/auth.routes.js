@@ -27,4 +27,26 @@ User.create({
         next(err)})
 })
 
+router.get('/login', (req, res, next) => {
+    res.render('auth/login')
+})
+
+router.post('/login', (req, res, next) => {
+    const {username, password} = req.body
+
+    //Validation
+    if (!email || !password) {
+        res.render('auth/login', {
+          errorMessage: 'Please enter both, email and password to login.'
+        });
+        return; // STOP
+    }
+
+    User.findOne({email: email})
+    .then(user => {
+        console.log(user);
+    })
+    .catch(err => next(err))
+})
+
 module.exports = router;
