@@ -70,13 +70,24 @@ router.get('/profil', (req, res, next) =>{
 
 router.get('/main', (req, res, next) => {
 
-    if (!req.user) {
+    if (!req.session.user) {
       res.redirect('/login'); // can't access the page, so go and log in
       return;
     }
   
     // ok, req.user is defined
-    res.render('users/main', { user: req.user });
+    res.render('users/main', { user: req.session.user });
+  });
+
+  router.get('/private', (req, res, next) => {
+
+    if (!req.session.user) {
+      res.redirect('/login'); // can't access the page, so go and log in
+      return;
+    }
+  
+    // ok, req.user is defined
+    res.render('users/private', { user: req.session.user });
   });
 
 module.exports = router;
