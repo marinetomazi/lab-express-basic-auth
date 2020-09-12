@@ -60,7 +60,6 @@ router.post('/login', (req, res, next) => {
     .catch(err => next(err))
 })
 
-
 router.get('/profil', (req, res, next) =>{
     if(!req.session.user){
         res.redirect('/login')
@@ -68,5 +67,16 @@ router.get('/profil', (req, res, next) =>{
     res.render('users/userProfil',{user: req.session.user})
 }
 )
+
+router.get('/main', (req, res, next) => {
+
+    if (!req.user) {
+      res.redirect('/login'); // can't access the page, so go and log in
+      return;
+    }
+  
+    // ok, req.user is defined
+    res.render('users/main', { user: req.user });
+  });
 
 module.exports = router;
